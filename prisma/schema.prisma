@@ -9,3 +9,54 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
+model Kid {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName  String
+  lastName   String
+  middleName String
+  omsPolicy  String?
+  adress     String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  parentIDs String[] @db.ObjectId
+  parents   Parent[] @relation(fields: [parentIDs], references: [id])
+
+  vaccinationIDs String[]      @db.ObjectId
+  vaccinations   Vaccination[] @relation(fields: [vaccinationIDs], references: [id])
+
+  absences Absence[]
+}
+
+model Parent {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  role       String
+  firstName  String?
+  lastName   String?
+  middleName String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  kidIDs String[] @db.ObjectId
+  kids   Kid[]    @relation(fields: [kidIDs], references: [id])
+}
+
+model Vaccination {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  label     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  kidIDs String[] @db.ObjectId
+  kids   Kid[]    @relation(fields: [kidIDs], references: [id])
+}
+
+model Absence {
+  id     String  @id @default(auto()) @map("_id") @db.ObjectId
+  date   String
+  reason String?
+
+  kidId String @db.ObjectId
+  kid   Kid    @relation(fields: [kidId], references: [id])
+}
