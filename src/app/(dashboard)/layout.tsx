@@ -11,7 +11,7 @@ export default function DashboardLayout({
       <NavbarWidget />
       <div className="flex mx-auto max-w-5xl h-full grow w-full">
         <SidebarWidget />
-        <main className="pr-4 grow">{children}</main>
+        <main className="border-r grow">{children}</main>
       </div>
     </div>
   );

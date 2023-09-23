@@ -23,12 +23,8 @@ export const Modal = forwardRef<React.ElementRef<typeof DialogContent>, Props>(
     const { pushQuery } = useQueryParams();
     const isOpen = useSearchParams().get("modal") === query;
 
-    if (!isOpen) {
-      return null;
-    }
-
     return (
-      <Dialog open onOpenChange={() => pushQuery({ modal: [] })}>
+      <Dialog open={isOpen} onOpenChange={() => pushQuery({ modal: [] })}>
         <DialogContent ref={ref}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

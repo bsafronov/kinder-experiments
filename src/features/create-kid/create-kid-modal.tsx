@@ -16,6 +16,8 @@ import { Input } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { Kid } from "@prisma/client";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   firstName: z.string().min(1, { message: "Обязательное поле" }),
@@ -26,6 +28,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 export function CreateKidModal() {
+  const router = useRouter();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,8 +40,10 @@ export function CreateKidModal() {
 
   const onSubmit = async (values: FormType) => {
     try {
-      const kid = await axios.post("/kids", values);
+      const res = await axios.post("/api/kids", values);
+      const kid = res.data as Kid;
       toast.success("Ребёнок успешно добавлен");
+      router.push(`/kids/${kid.id}`);
     } catch {
       toast.error("Что-то пошло не так...");
     }

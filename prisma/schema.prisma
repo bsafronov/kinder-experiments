@@ -17,6 +17,7 @@ model Kid {
   middleName String
   omsPolicy  String?
   adress     String?
+  birthDate  String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -27,6 +28,7 @@ model Kid {
   vaccinations   Vaccination[] @relation(fields: [vaccinationIDs], references: [id])
 
   absences Absence[]
+  notes    Note[]
 }
 
 model Parent {
@@ -56,6 +58,16 @@ model Absence {
   id     String  @id @default(auto()) @map("_id") @db.ObjectId
   date   String
   reason String?
+
+  kidId String @db.ObjectId
+  kid   Kid    @relation(fields: [kidId], references: [id])
+}
+
+model Note {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   kidId String @db.ObjectId
   kid   Kid    @relation(fields: [kidId], references: [id])
