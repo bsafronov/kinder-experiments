@@ -44,6 +44,7 @@ export function CreateKidModal() {
       const kid = res.data as Kid;
       toast.success("Ребёнок успешно добавлен");
       router.push(`/kids/${kid.id}`);
+      router.refresh();
     } catch {
       toast.error("Что-то пошло не так...");
     }

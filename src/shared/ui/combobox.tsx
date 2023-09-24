@@ -13,17 +13,44 @@ import {
 } from "./command";
 import { cn } from "../lib/utils";
 
-type Props = {
-  options: { label: string; value: string }[];
-  value?: string;
-  onChange: (value: string) => void;
+type Option = {
+  label: string;
+  value: string;
 };
+
+type CommonProps = {
+  options: Option[];
+};
+
+type SingleSelectProps = CommonProps & {
+  isMulti?: false;
+  value?: Option;
+  onChange: (value: Option) => void;
+};
+
+type MultiSelectProps = CommonProps & {
+  isMulti: true;
+  value: Option[];
+  onChange: (value: Option[]) => void;
+};
+
+type Props = SingleSelectProps | MultiSelectProps;
 
 export const Combobox = React.forwardRef<
   React.ElementRef<typeof Popover>,
   Props
->(({ onChange, options, value }: Props, ref) => {
+>(({ onChange, options, value, isMulti }: Props, ref) => {
   const [open, setOpen] = React.useState(false);
+
+  const valuesIDs = React.useMemo(() => {
+    if (Array.isArray(value)) {
+      return value.map((option) => option.value);
+    }
+    if (value?.value) {
+      return [value?.value];
+    }
+    return [];
+  }, [value]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -32,32 +59,41 @@ export const Combobox = React.forwardRef<
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-full justify-between px-3"
+          className="min-w-full justify-between px-3 text-start h-auto"
         >
-          {value
-            ? options.find((option) => option.value === value)?.label
-            : "Выбрать..."}
+          {Array.isArray(value) &&
+            value.length > 0 &&
+            value.map((option) => option.label).join(", ")}
+          {!Array.isArray(value) && value?.value && value.label}
+          {!Array.isArray(value) && !value?.value && "Выбрать..."}
+          {Array.isArray(value) && value.length === 0 && "Выбрать..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full p-0" align="start">
+      <PopoverContent className="w-full p-0">
         <Command>
           <CommandInput placeholder="Поиск" />
           <CommandEmpty>Ничего не найдено...</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup className="w-full">
             {options.map((option) => (
               <CommandItem
                 key={option.value}
                 onSelect={() => {
-                  onChange(option.value === value ? "" : option.value);
-                  setOpen(false);
+                  if (isMulti) {
+                    const updatedValue = valuesIDs.includes(option.value)
+                      ? value.filter((v) => v.value !== option.value)
+                      : [...value, option];
+                    onChange(updatedValue);
+                  } else {
+                    onChange(option);
+                    setOpen(false);
+                  }
                 }}
               >
                 <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === option.value ? "opacity-100" : "opacity-0"
-                  )}
+                  className={cn("mr-2 h-4 w-4 opacity-0", {
+                    "opacity-100": valuesIDs.includes(option.value),
+                  })}
                 />
                 {option.label}
               </CommandItem>

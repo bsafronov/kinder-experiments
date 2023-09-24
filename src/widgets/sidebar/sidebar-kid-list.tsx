@@ -5,7 +5,7 @@ export async function SidebarKidList() {
   const kids = await db.kid.findMany();
 
   return (
-    <ul className="p-4 overflow-hidden border-b">
+    <ul className="px-4 py-2 overflow-hidden border-b">
       {kids.map((kid) => (
         <li key={kid.id}>
           <SidebarKidItem kid={kid} />

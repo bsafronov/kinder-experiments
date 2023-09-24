@@ -1,0 +1,1 @@
+export { EditKidFormWidget } from "./widget";

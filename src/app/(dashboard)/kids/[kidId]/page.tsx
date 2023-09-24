@@ -1,5 +1,5 @@
 import { db } from "@/shared/lib/db";
-import { EditKidWidget } from "@/widgets/edit-kid";
+import { EditKidFormWidget } from "@/widgets/edit-kid-form";
 import { redirect } from "next/navigation";
 
 export default async function KidPage({
@@ -15,12 +15,15 @@ export default async function KidPage({
       parents: true,
       absences: true,
       vaccinations: true,
+      notes: true,
     },
   });
+
+  const vaccinations = await db.vaccination.findMany({});
 
   if (!kid) {
     return redirect("/");
   }
 
-  return <EditKidWidget kid={kid} />;
+  return <EditKidFormWidget kid={kid} vaccinations={vaccinations} />;
 }
