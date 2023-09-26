@@ -16,7 +16,7 @@ type Props = {
   title?: string;
   description?: string;
   variant?: "default" | "destructive";
-  onAction?: () => void;
+  onAction: (values?: any) => void;
 };
 
 export function ConfirmDialog({
