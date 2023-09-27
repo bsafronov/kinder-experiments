@@ -1,1 +1,1 @@
-export {} from "./ui";
+export { AbsenceItemWidget } from "./ui";

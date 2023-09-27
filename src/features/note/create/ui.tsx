@@ -10,13 +10,12 @@ import {
 import { Textarea } from "@/shared/ui/textarea";
 import { useNoteCreateForm } from "./model";
 import { useApi } from "@/shared/hooks/useApi";
+import { useAuth } from "@clerk/nextjs";
+import { useParams } from "next/navigation";
 
-type Props = {
-  userId: string;
-  kidId: string;
-};
-
-export function NoteCreateFeature({ kidId, userId }: Props) {
+export function NoteCreateFeature() {
+  const { userId } = useAuth();
+  const { kidId } = useParams();
   const { form } = useNoteCreateForm();
   const { onSubmit } = useApi({
     method: "post",

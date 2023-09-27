@@ -1,6 +1,5 @@
 "use client";
 
-import { CreateKidModal } from "@/features/create-kid";
 import { useEffect, useState } from "react";
 
 export function ModalWidget() {
@@ -14,9 +13,5 @@ export function ModalWidget() {
     return null;
   }
 
-  return (
-    <>
-      <CreateKidModal />
-    </>
-  );
+  return <>{/* <CreateKidModal /> */}</>;
 }

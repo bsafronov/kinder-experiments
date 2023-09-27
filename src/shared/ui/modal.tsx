@@ -9,26 +9,34 @@ import {
   DialogTitle,
 } from "@/shared/ui/dialog";
 import { useSearchParams } from "next/navigation";
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 
 type Props = {
-  title?: string;
+  title: string;
   description?: string;
-  query?: string;
+  query: string;
   children?: React.ReactNode;
 };
 
 export const Modal = forwardRef<React.ElementRef<typeof DialogContent>, Props>(
   ({ children, description, title, query }, ref) => {
+    const [isMounted, setMounted] = useState(false);
     const { pushQuery } = useQueryParams();
     const isOpen = useSearchParams().get("modal") === query;
+
+    useEffect(() => {
+      setMounted(true);
+    }, []);
+    if (!isMounted) return null;
 
     return (
       <Dialog open={isOpen} onOpenChange={() => pushQuery({ modal: [] })}>
         <DialogContent ref={ref}>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
+            {description && (
+              <DialogDescription>{description}</DialogDescription>
+            )}
           </DialogHeader>
           {children}
         </DialogContent>

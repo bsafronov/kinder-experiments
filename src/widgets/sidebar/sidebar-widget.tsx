@@ -1,4 +1,4 @@
-import { CreateKidFeature } from "@/features/create-kid";
+import { KidCreateFeature } from "@/features/kid";
 import { SidebarKidList } from "./sidebar-kid-list";
 import { db } from "@/shared/lib/db";
 
@@ -12,7 +12,7 @@ export async function SidebarWidget() {
       </h5>
       <SidebarKidList />
       <div className="p-4">
-        <CreateKidFeature />
+        <KidCreateFeature isModal />
       </div>
     </div>
   );
